@@ -1,16 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
+import { getDataFromLocalStorage } from "../util/data";
+
 
 function App() {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(getDataFromLocalStorage());
+  if(notes !== []){
+    console.log("Notes: ",notes);
+  } else{
+    console.log("Notes not null : ",notes);
+  }
+ 
 
   function addNote(newNote) {
-    setNotes(prevNotes => {
-      return [...prevNotes, newNote];
-    });
+    let noteId = 0;
+    noteId = "note-" + (notes.length).toString();
+  
+    const note = {
+      id: noteId,
+      title: newNote.title,
+      content: newNote.content
+    }
+    console.log("new Note: ",note);
+    setNotes([...notes, note]);
   }
 
   function deleteNote(id) {
@@ -21,11 +36,17 @@ function App() {
     });
   }
 
+  useEffect(()=>{
+    localStorage.setItem("notes",JSON.stringify(notes));
+  },[notes]);
+
   return (
     <div>
       <Header />
       <CreateArea onAdd={addNote} />
-      {notes.map((noteItem, index) => {
+      
+      {(notes !== "") ?
+        notes.map((noteItem, index) => {
         return (
           <Note
             key={index}
@@ -35,7 +56,8 @@ function App() {
             onDelete={deleteNote}
           />
         );
-      })}
+      }): ""
+      } 
       <Footer />
     </div>
   );
