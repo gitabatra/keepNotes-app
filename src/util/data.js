@@ -4,3 +4,14 @@ export const getDataFromLocalStorage=() =>{
     return initialValue || "";
 
 }
+
+export const getNoteColor=(id) =>{
+    console.log("current id: ",id)
+   const notesData = getDataFromLocalStorage();
+   const filteredData = notesData.filter((data, index) => {
+    console.log("current id: ",data)
+      return id===data.id
+    });
+   console.log(filteredData);
+   return (filteredData);
+}

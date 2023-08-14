@@ -8,12 +8,8 @@ import { getDataFromLocalStorage } from "../util/data";
 
 function App() {
   const [notes, setNotes] = useState(getDataFromLocalStorage());
-  if(notes !== []){
-    console.log("Notes: ",notes);
-  } else{
-    console.log("Notes not null : ",notes);
-  }
- 
+  const colors = ['#fef08a','#d9f99d','#a3e635','#a7f3d0','#99f6e4','#22d3ee','#a5b4fc','#d8b4fe','#f0abfc','#fda4af','#fb923c','#ffffff']
+  const [selectedColor, setColor] = useState("#fff");
 
   function addNote(newNote) {
     let noteId = 0;
@@ -22,16 +18,16 @@ function App() {
     const note = {
       id: noteId,
       title: newNote.title,
-      content: newNote.content
+      content: newNote.content,
+      color: newNote.color
     }
-    console.log("new Note: ",note);
     setNotes([...notes, note]);
   }
 
   function deleteNote(id) {
     setNotes(prevNotes => {
       return prevNotes.filter((noteItem, index) => {
-        return index !== id;
+        return noteItem.id !== id;
       });
     });
   }
@@ -43,16 +39,30 @@ function App() {
   return (
     <div>
       <Header />
-      <CreateArea onAdd={addNote} />
+      <div id="wrapper" className="color-list" style={{marginTop: "10px"}}>
+        {colors.map((color,index)=> {
+        return ( <div key={index} 
+        style={{
+        display:"inline-flex",
+        marginRight:"10px",
+        width:"20px",
+        height:"20px",
+        borderRadius:"50%",
+        backgroundColor: color}}
+        onClick={()=>{setColor(color)}}>
+        </div> )})}
+      </div>
+      <CreateArea onAdd={addNote} selectedColor={selectedColor}/>
       
       {(notes !== "") ?
         notes.map((noteItem, index) => {
         return (
           <Note
             key={index}
-            id={index}
+            id={noteItem.id}
             title={noteItem.title}
             content={noteItem.content}
+            color={noteItem.color}
             onDelete={deleteNote}
           />
         );
