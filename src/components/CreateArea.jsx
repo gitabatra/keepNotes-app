@@ -3,6 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
 import Zoom from '@mui/material/Zoom';
 
+
 function CreateArea(props) {
   const [isExpanded, setExpanded] = useState(false);
 
@@ -12,12 +13,12 @@ function CreateArea(props) {
   
   const [note, setNote] = useState({
     title: "",
-    content: ""
+    content: "",
+    color: ""
   });
 
   function handleChange(event) {
     const { name, value } = event.target;
-
     setNote(prevNote => {
       return {
         ...prevNote,
@@ -27,25 +28,32 @@ function CreateArea(props) {
   }
 
   function submitNote(event) {
-    props.onAdd(note);
+   console.log("Note data from createNote: ",note);
+   note.color = props.selectedColor
+   console.log("Note data from createNote after adding color: ",note);
+   props.onAdd(note);
     setNote({
       title: "",
-      content: ""
+      content: "",
+      color: ""
     });
     event.preventDefault();
   }
 
   return (
     <div>
-      <form className="create-note">
+      <form className="create-note" style={{backgroundColor: `${props.selectedColor}`}}>
        {isExpanded && (<input
           name="title"
           onChange={handleChange}
           value={note.title}
           placeholder="Title"
+        
+          autoFocus
         />)}
         <textarea
           name="content"
+          // style={{backgroundColor: `${props.selectedColor}`}}
           onClick={handleClick}
           onChange={handleChange}
           value={note.content}
@@ -53,7 +61,7 @@ function CreateArea(props) {
           rows={isExpanded? 3 : 1}
         />
         <Zoom in={isExpanded}>
-        <Fab onClick={submitNote}><AddIcon /></Fab>
+        <Fab sx={{":hover": {backgroundColor: "#8b5cf6"}}} onClick={submitNote}><AddIcon /></Fab>
         </Zoom>
       </form>
     </div>
