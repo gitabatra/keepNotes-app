@@ -28,9 +28,7 @@ function CreateArea(props) {
   }
 
   function submitNote(event) {
-   console.log("Note data from createNote: ",note);
    note.color = props.selectedColor
-   console.log("Note data from createNote after adding color: ",note);
    props.onAdd(note);
     setNote({
       title: "",
